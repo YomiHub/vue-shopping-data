@@ -8,5 +8,6 @@ router.all('*', function (req, res, next) {
 })
 
 router.get('/getSwipe', service.getSwipe);
-
+router.get('/getNewsList', service.getNewsList);
+router.get('/getNewsDetail', service.getNewsDetail);
 module.exports = router;
