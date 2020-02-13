@@ -10,4 +10,7 @@ router.all('*', function (req, res, next) {
 router.get('/getSwipe', service.getSwipe);
 router.get('/getNewsList', service.getNewsList);
 router.get('/getNewsDetail', service.getNewsDetail);
+router.get('/getNewsComment', service.getNewsComment);
+
+router.post('/addComment', service.addComment);
 module.exports = router;
