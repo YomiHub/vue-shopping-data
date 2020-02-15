@@ -55,3 +55,24 @@ exports.addComment = (req, res) => {
     }
   })
 }
+
+//获取图片类别
+exports.getCategory = (req, res) => {
+  let sql = 'select * from photo_category';
+  db.base(sql, null, (results) => {
+    res.json({ status: 0, message: results });
+  })
+}
+
+//按分类获取图片列表
+exports.getPhotoList = (req, res) => {
+  let id = req.query.categoryId;
+  let sql = 'select * from photo';
+  if (id != 0) {
+    sql = 'select * from photo where category_id=?';
+  }
+  let data = [id];
+  db.base(sql, data, (results) => {
+    res.json({ status: 0, message: results })
+  })
+}
