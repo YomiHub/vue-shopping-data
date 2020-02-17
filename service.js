@@ -23,7 +23,12 @@ exports.getNewsDetail = (req, res) => {
   let sql = 'select id,title,add_time,click_times,detail from article where id=?';
   let data = [id];
   db.base(sql, data, (results) => {
-    res.json({ status: 0, message: results });
+    let sql2 = 'update article set click_times=? where id=?'
+    let click_times = results[0].click_times + 1;
+    let data2 = [click_times, id];
+    db.base(sql2, data2, (results2) => {
+      res.json({ status: 0, message: results });
+    })
   })
 }
 
@@ -69,10 +74,74 @@ exports.getPhotoList = (req, res) => {
   let id = req.query.categoryId;
   let sql = 'select * from photo';
   if (id != 0) {
-    sql = 'select * from photo where category_id=?';
+    sql = 'select id,title,image_url,abstract from photo where category_id=?';
   }
   let data = [id];
   db.base(sql, data, (results) => {
     res.json({ status: 0, message: results })
+  })
+}
+
+//获取图片详情
+exports.getPhotoDetail = (req, res) => {
+  let id = req.query.photoId;
+  let sql = 'select * from photo where id=?';
+  let data = [id];
+  db.base(sql, data, (results) => {
+    let sql2 = 'update photo set click_times=? where id=?'
+    let click_times = results[0].click_times + 1;
+    let data2 = [click_times, id];
+    db.base(sql2, data2, (results2) => {
+      res.json({ status: 0, message: results });
+    })
+  })
+}
+
+//获取图片详情下的图片列表
+exports.getPhotoGroup = (req, res) => {
+  let id = req.query.photoId;
+  let sql = 'select * from photo_group where photo_id=?';
+  let data = [id];
+  db.base(sql, data, (results) => {
+    res.json({ status: 0, message: results })
+  })
+}
+
+/* 评论部分可以和资讯评论合并，通过type确定类型 */
+
+//分页获取图片的评论
+exports.getPhotoComment = (req, res) => {
+  let id = req.query.articleid;
+  let pageindex = req.query.pageindex;
+  let pagesize = req.query.pagesize || 2;
+  let sql1 = 'select count(*) as total from photo_comments where photo_id=?';
+  let data1 = [id];
+  db.base(sql1, data1, (results1) => {
+    let sql2 = 'select * from photo_comments where photo_id=? order by id desc limit ?,?';
+    let data2 = [id, (pageindex - 1) * pagesize, parseInt(pagesize)];
+    db.base(sql2, data2, (results2) => {
+      res.json({ status: 0, message: { total: results1[0].total, data: results2 } })
+    })
+  })
+}
+
+//添加图片评论
+exports.addPhotoComment = (req, res) => {
+  let data = req.body;
+  let addData = {};
+  for (let key in data) {
+    if (key == "article_id") {
+      addData["photo_id"] = data[key];
+    } else {
+      addData[key] = data[key];
+    }
+  }
+  let sql = 'insert into photo_comments set ?';
+  db.base(sql, addData, (results) => {
+    if (results.affectedRows == 1) {
+      res.json({ status: 0, message: data });
+    } else {
+      res.json({ status: 1 })
+    }
   })
 }

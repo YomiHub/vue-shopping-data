@@ -15,4 +15,8 @@ router.get('/getNewsComment', service.getNewsComment);
 router.post('/addComment', service.addComment);
 router.get('/getCategory', service.getCategory);
 router.get('/getPhotoList', service.getPhotoList);
+router.get('/getPhotoDetail', service.getPhotoDetail);
+router.get('/getPhotoGroup', service.getPhotoGroup);
+router.get('/getPhotoComment', service.getPhotoComment);
+router.post('/addPhotoComment', service.addPhotoComment);
 module.exports = router;
