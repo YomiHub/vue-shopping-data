@@ -19,4 +19,6 @@ router.get('/getPhotoDetail', service.getPhotoDetail);
 router.get('/getPhotoGroup', service.getPhotoGroup);
 router.get('/getPhotoComment', service.getPhotoComment);
 router.post('/addPhotoComment', service.addPhotoComment);
+
+router.get('/getGoodsList', service.getGoodsList);
 module.exports = router;

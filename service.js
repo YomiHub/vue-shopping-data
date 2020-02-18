@@ -145,3 +145,17 @@ exports.addPhotoComment = (req, res) => {
     }
   })
 }
+
+//分页获取商品列表
+exports.getGoodsList = (req, res) => {
+  let pageindex = req.query.pageindex || 1;
+  let pagesize = req.query.pagesize || 2;
+  let sql1 = 'select * from goods order by id desc limit ?,?';
+  let data1 = [(pageindex - 1) * pagesize, parseInt(pagesize)];
+  db.base(sql1, data1, (results1) => {
+    let sql2 = 'select count(*) as total from goods';
+    db.base(sql2, null, (results2) => {
+      res.json({ status: 0, message: { total: results2[0].total, data: results1 } })
+    })
+  })
+}
