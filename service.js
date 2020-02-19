@@ -159,3 +159,23 @@ exports.getGoodsList = (req, res) => {
     })
   })
 }
+
+//获取商品详情下的轮播图列表
+exports.getGoodsSwipe = (req, res) => {
+  let id = req.query.goodsId;
+  let sql = 'select * from goods_swipe where goods_id=?';
+  let data = [id];
+  db.base(sql, data, (result) => {
+    res.json({ status: 0, message: result })
+  })
+}
+
+//获取商品详情相关信息
+exports.getGoodsDetail = (req, res) => {
+  let id = req.query.goodsId;
+  let sql = 'select * from goods where id=?';
+  let data = [id];
+  db.base(sql, data, (result) => {
+    res.json({ status: 0, message: result })
+  })
+}
