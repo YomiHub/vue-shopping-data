@@ -150,7 +150,7 @@ exports.addPhotoComment = (req, res) => {
 exports.getGoodsList = (req, res) => {
   let pageindex = req.query.pageindex || 1;
   let pagesize = req.query.pagesize || 2;
-  let sql1 = 'select * from goods order by id desc limit ?,?';
+  let sql1 = 'select id,title,add_time,abstract,click_times,image_url,sell_price,market_price,sold_quantity,stock_quantity from goods order by id desc limit ?,?';
   let data1 = [(pageindex - 1) * pagesize, parseInt(pagesize)];
   db.base(sql1, data1, (results1) => {
     let sql2 = 'select count(*) as total from goods';
@@ -173,9 +173,57 @@ exports.getGoodsSwipe = (req, res) => {
 //获取商品详情相关信息
 exports.getGoodsDetail = (req, res) => {
   let id = req.query.goodsId;
-  let sql = 'select * from goods where id=?';
+  let sql = 'select id,title,add_time,abstract,click_times,image_url,sell_price,market_price,sold_quantity,stock_quantity,goods_num from goods where id=?';
   let data = [id];
   db.base(sql, data, (result) => {
     res.json({ status: 0, message: result })
+  })
+}
+
+//获取商品图文介绍
+exports.getGoodsInfo = (req, res) => {
+  let id = req.query.goodsId;
+  let sql = 'select id,title,info from goods where id=?';
+  let data = [id];
+  db.base(sql, data, (result) => {
+    res.json({ status: 0, message: result })
+  })
+}
+
+//获取商品详情评论
+exports.getGoodsComment = (req, res) => {
+  let id = req.query.articleid;
+
+  let pageindex = req.query.pageindex;
+  let pagesize = req.query.pagesize || 2;
+  let sql1 = 'select count(*) as total from goods_comments where goods_id=?';
+  let data1 = [id];
+  db.base(sql1, data1, (results1) => {
+    let sql2 = 'select * from goods_comments where goods_id=? order by id desc limit ?,?';
+    let data2 = [id, (pageindex - 1) * pagesize, parseInt(pagesize)];
+    db.base(sql2, data2, (results2) => {
+      res.json({ status: 0, message: { total: results1[0].total, data: results2 } })
+    })
+  })
+}
+
+//添加商品评论
+exports.addGoodsComment = (req, res) => {
+  let data = req.body;
+  let addData = {};
+  for (let key in data) {
+    if (key == "article_id") {
+      addData["goods_id"] = data[key];
+    } else {
+      addData[key] = data[key];
+    }
+  }
+  let sql = 'insert into goods_comments set ?';
+  db.base(sql, addData, (results) => {
+    if (results.affectedRows == 1) {
+      res.json({ status: 0, message: addData });
+    } else {
+      res.json({ status: 1 })
+    }
   })
 }

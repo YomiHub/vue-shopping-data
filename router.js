@@ -23,4 +23,7 @@ router.post('/addPhotoComment', service.addPhotoComment);
 router.get('/getGoodsList', service.getGoodsList);
 router.get('/getGoodsSwipe', service.getGoodsSwipe);
 router.get('/getGoodsDetail', service.getGoodsDetail);
+router.get('/getGoodsInfo', service.getGoodsInfo);
+router.get('/getGoodsComment', service.getGoodsComment);
+router.post('/addGoodsComment', service.addGoodsComment);
 module.exports = router;
