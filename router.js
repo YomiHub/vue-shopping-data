@@ -26,4 +26,6 @@ router.get('/getGoodsDetail', service.getGoodsDetail);
 router.get('/getGoodsInfo', service.getGoodsInfo);
 router.get('/getGoodsComment', service.getGoodsComment);
 router.post('/addGoodsComment', service.addGoodsComment);
+
+router.get('/getGoodsCarList', service.getGoodsCarList);
 module.exports = router;

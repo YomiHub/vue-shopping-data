@@ -227,3 +227,21 @@ exports.addGoodsComment = (req, res) => {
     }
   })
 }
+
+//获取购物车列表数据
+exports.getGoodsCarList = (req, res) => {
+  /*   let userId = 0;  //在该案例中没有设计用户表，默认查询用户的ID为0
+    let sql = 'select goods_car.id,goods_car.goods_count,goods.title,goods.sell_price,goods.image_url from goods_car inner join goods on goods_car.goods_id=goods.id where goods_car.user_id=?';
+    let data = [userId];
+    db.base(sql, data, (results) => {
+      res.json({ status: 0, message: results });
+    }) */
+
+  //在案例中购物车使用的是本地存储，请求参数ids为购物车中所有商品id
+  let ids = req.query.ids;
+  let sql = 'select id,title,sell_price,image_url,stock_quantity from goods where find_in_set(id,?)>0';
+  let data = [ids];
+  db.base(sql, data, (results) => {
+    res.json({ status: 0, message: results });
+  })
+}
