@@ -245,3 +245,17 @@ exports.getGoodsCarList = (req, res) => {
     res.json({ status: 0, message: results });
   })
 }
+
+//根据关键字获取商品列表
+exports.getGoodsByKey = (req, res) => {
+  let key = req.query.key;
+  let pageindex = req.query.pageindex || 1;
+  let pagesize = req.query.pagesize || 2;
+  let sql1 = "select id,title,add_time,abstract,click_times,image_url,sell_price,market_price,sold_quantity,stock_quantity from goods where title like '%" + key + "%' ESCAPE '\' order by id desc limit " + (pageindex - 1) * pagesize + "," + parseInt(pagesize);
+  db.base(sql1, null, (results1) => {
+    let sql2 = "select count(*) as total from goods where title like '%" + key + "%' ESCAPE '\'";
+    db.base(sql2, null, (results2) => {
+      res.json({ status: 0, message: { total: results2[0].total, data: results1 } })
+    })
+  })
+}
