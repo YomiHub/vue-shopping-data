@@ -194,7 +194,7 @@ exports.getGoodsInfo = (req, res) => {
 exports.getGoodsComment = (req, res) => {
   let id = req.query.articleid;
 
-  let pageindex = req.query.pageindex;
+  let pageindex = req.query.pageindex || 1;
   let pagesize = req.query.pagesize || 2;
   let sql1 = 'select count(*) as total from goods_comments where goods_id=?';
   let data1 = [id];
@@ -210,6 +210,7 @@ exports.getGoodsComment = (req, res) => {
 //添加商品评论
 exports.addGoodsComment = (req, res) => {
   let data = req.body;
+  console.log(req.body)
   let addData = {};
   for (let key in data) {
     if (key == "article_id") {
